@@ -80,20 +80,6 @@ extension ViewController {
 
 // MARK: MemeTextFields
 extension ViewController: UITextFieldDelegate {
-    func setupTextField(textField: UITextField, defaultText: String) {
-        textField.text = defaultText
-        textField.adjustsFontSizeToFitWidth = true
-        textField.autocapitalizationType = .allCharacters
-        textField.defaultTextAttributes = memeTextAttributes
-        textField.textAlignment = .center
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            textField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            textField.widthAnchor.constraint(equalTo: view.widthAnchor)
-        ])
-    }
-    
     func configureTopTextField(){
         setupTextField(textField: topTextField, defaultText: "TOP")
         topTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100).isActive = true
@@ -111,6 +97,20 @@ extension ViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func setupTextField(textField: UITextField, defaultText: String) {
+        textField.text = defaultText
+        textField.adjustsFontSizeToFitWidth = true
+        textField.autocapitalizationType = .allCharacters
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = .center
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            textField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            textField.widthAnchor.constraint(equalTo: view.widthAnchor)
+        ])
     }
 }
 
@@ -154,13 +154,6 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
         ])
     }
     
-    func handleImagePick(source: UIImagePickerController.SourceType){
-        let pickerController = UIImagePickerController()
-        pickerController.delegate = self
-        pickerController.sourceType = source
-        present(pickerController, animated: true, completion: nil)
-    }
-    
     @objc func handleLibraryImagePick() {
         handleImagePick(source: .photoLibrary)
     }
@@ -179,6 +172,13 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
+    }
+    
+    func handleImagePick(source: UIImagePickerController.SourceType){
+        let pickerController = UIImagePickerController()
+        pickerController.delegate = self
+        pickerController.sourceType = source
+        present(pickerController, animated: true, completion: nil)
     }
 }
 
@@ -206,8 +206,8 @@ extension ViewController {
         topToolbar.isHidden = true
         bottomToolbar.isHidden = true
         
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+        UIGraphicsBeginImageContext(view.frame.size)
+        view.drawHierarchy(in: view.frame, afterScreenUpdates: true)
         let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         
