@@ -10,7 +10,6 @@ import Foundation
 
 class ViewController: UIViewController {
     private let memeImageView = UIImageView()
-    private let memeImage:UIImage? = nil
     
     private let topTextField = UITextField()
     private let bottomTextField = UITextField()
@@ -27,18 +26,11 @@ class ViewController: UIViewController {
     private let cancelBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
     
     private let bottomToolbar = UIToolbar()
-    private let imagePickBarButtonItem = UIBarButtonItem(title: "Album", style: .plain, target: self, action: #selector(handleImagePick))
+    private let imagePickBarButtonItem = UIBarButtonItem(title: "Album", style: .plain, target: self, action: #selector(handleLibraryImagePick))
     private let cameraBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(handleCameraOpen))
     
     private let flexibleSpaceBarItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-    
-    private struct Meme {
-        let topText: String
-        let bottomText: String
-        let originalImage: UIImage
-        let memeImage: UIImage
-    }
-
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(memeImageView)
@@ -80,40 +72,36 @@ extension ViewController {
         memeImageView.contentMode = .scaleAspectFit
         
         NSLayoutConstraint.activate([
-            memeImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            memeImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            memeImageView.topAnchor.constraint(equalTo: view.topAnchor),
-            memeImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            memeImageView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
+            memeImageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor)
         ])
     }
 }
 
 // MARK: MemeTextFields
 extension ViewController: UITextFieldDelegate {
-    func configureTopTextField(){
-        topTextField.text = "TOP"
-        topTextField.textAlignment = .center
-        topTextField.autocapitalizationType = .allCharacters
-        topTextField.defaultTextAttributes = memeTextAttributes
-        topTextField.translatesAutoresizingMaskIntoConstraints = false
+    func setupTextField(textField: UITextField, defaultText: String) {
+        textField.text = defaultText
+        textField.adjustsFontSizeToFitWidth = true
+        textField.autocapitalizationType = .allCharacters
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = .center
+        textField.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            topTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100),
-            topTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            textField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            textField.widthAnchor.constraint(equalTo: view.widthAnchor)
         ])
     }
     
+    func configureTopTextField(){
+        setupTextField(textField: topTextField, defaultText: "TOP")
+        topTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100).isActive = true
+    }
+    
     func configureBottomTextField(){
-        bottomTextField.text = "Bottom"
-        bottomTextField.textAlignment = .center
-        bottomTextField.autocapitalizationType = .allCharacters
-        bottomTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            bottomTextField.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100),
-            bottomTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
+        setupTextField(textField: bottomTextField, defaultText: "BOTTOM")
+        bottomTextField.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100).isActive = true
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -150,8 +138,7 @@ extension ViewController {
     }
 
     func unsubscribeFromKeyboardNotifications(){
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self)
     }
 }
 
@@ -162,24 +149,24 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
         bottomToolbar.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            bottomToolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomToolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomToolbar.widthAnchor.constraint(equalTo: view.widthAnchor),
             bottomToolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
-    @objc func handleImagePick() {
+    func handleImagePick(source: UIImagePickerController.SourceType){
         let pickerController = UIImagePickerController()
         pickerController.delegate = self
-        pickerController.sourceType = .photoLibrary
+        pickerController.sourceType = source
         present(pickerController, animated: true, completion: nil)
     }
     
+    @objc func handleLibraryImagePick() {
+        handleImagePick(source: .photoLibrary)
+    }
+    
     @objc func handleCameraOpen(){
-        let pickerConrtoller = UIImagePickerController()
-        pickerConrtoller.delegate = self
-        pickerConrtoller.sourceType = .camera
-        present(pickerConrtoller, animated: true, completion: nil)
+        handleImagePick(source: .camera)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -203,8 +190,7 @@ extension ViewController {
         topToolbar.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            topToolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topToolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topToolbar.widthAnchor.constraint(equalTo: view.widthAnchor),
             topToolbar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
         ])
     }
@@ -230,8 +216,8 @@ extension ViewController {
         return memedImage
     }
     
-    func save() {
-        _ = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: memeImageView.image!, memeImage: memeImage!)
+    func save(memeImage: UIImage) {
+        _ = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: memeImageView.image!, memeImage: memeImage)
     }
     
     @objc func handleShare(){
@@ -241,7 +227,7 @@ extension ViewController {
         activityViewController.completionWithItemsHandler = {
             (activity, success, items, error) in
             if(success && error == nil){
-                self.save()
+                self.save(memeImage: newMemeImage)
                 self.dismiss(animated: true, completion: nil);
             }}
     }
