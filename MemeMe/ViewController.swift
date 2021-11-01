@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  MemeMe 1.0
+//  MemeMe
 //
 //  Created by Hanyu Tang on 10/25/21.
 //
