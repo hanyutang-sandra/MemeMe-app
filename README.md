@@ -1,2 +1,2 @@
-# MemeMe-1.0-app
-MemeMe 1.0 App Udacity UIKit Fundamentals
+# MemeMe-app
+MemeMe App Udacity UIKit Fundamentals
