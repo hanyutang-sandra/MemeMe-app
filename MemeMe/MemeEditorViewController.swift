@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MemeEditorViewController.swift
 //  MemeMe
 //
 //  Created by Hanyu Tang on 10/25/21.
@@ -8,7 +8,7 @@
 import UIKit
 import Foundation
 
-class ViewController: UIViewController {
+class MemeEditorViewController: UIViewController {
     private let memeImageView = UIImageView()
     
     private let topTextField = UITextField()
@@ -66,7 +66,7 @@ class ViewController: UIViewController {
 }
 
 // MARK: MemeImageView
-extension ViewController {
+extension MemeEditorViewController {
     func configureMemeImageView(){
         memeImageView.translatesAutoresizingMaskIntoConstraints = false
         memeImageView.contentMode = .scaleAspectFit
@@ -79,7 +79,7 @@ extension ViewController {
 }
 
 // MARK: MemeTextFields
-extension ViewController: UITextFieldDelegate {
+extension MemeEditorViewController: UITextFieldDelegate {
     func configureTopTextField(){
         setupTextField(textField: topTextField, defaultText: "TOP")
         topTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100).isActive = true
@@ -115,7 +115,7 @@ extension ViewController: UITextFieldDelegate {
 }
 
 // MARK: Keyboard handling
-extension ViewController {
+extension MemeEditorViewController {
     @objc func keyboardWillShow(_ notification:Notification) {
         if bottomTextField.isEditing {
             view.frame.origin.y = -getKeyboardHeight(notification)
@@ -143,7 +143,7 @@ extension ViewController {
 }
 
 // MARK: BottomToolbar
-extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension MemeEditorViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func configureBottomToolbar(){
         bottomToolbar.setItems([flexibleSpaceBarItem, imagePickBarButtonItem, cameraBarButtonItem, flexibleSpaceBarItem], animated: true)
         bottomToolbar.translatesAutoresizingMaskIntoConstraints = false
@@ -183,7 +183,7 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
 }
 
 // MARK: TopToolBar
-extension ViewController {
+extension MemeEditorViewController {
     func configureTopToolbar(){
         topToolbar.setItems([shareBarButtonItem, flexibleSpaceBarItem, cancelBarButtonItem], animated: true)
         shareBarButtonItem.isEnabled = false
@@ -200,6 +200,8 @@ extension ViewController {
         topTextField.text = "TOP"
         bottomTextField.text = "BOTTOM"
         shareBarButtonItem.isEnabled = false
+        
+        self.dismiss(animated: true, completion: nil)
     }
     
     func generateMemedImage() -> UIImage {
@@ -217,13 +219,16 @@ extension ViewController {
     }
     
     func save(memeImage: UIImage) {
-        _ = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: memeImageView.image!, memeImage: memeImage)
+        let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: memeImageView.image!, memeImage: memeImage)
+        let object = UIApplication.shared.delegate
+        let appDelegate = object as! AppDelegate
+        appDelegate.memes.append(meme)
     }
     
     @objc func handleShare(){
         let newMemeImage = generateMemedImage()
         let activityViewController = UIActivityViewController(activityItems: [newMemeImage], applicationActivities: nil)
-        present(activityViewController, animated: true) {}
+        present(activityViewController, animated: true)
         activityViewController.completionWithItemsHandler = {
             (activity, success, items, error) in
             if(success && error == nil){
