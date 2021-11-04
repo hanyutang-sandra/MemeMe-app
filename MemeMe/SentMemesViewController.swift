@@ -24,7 +24,6 @@ class SentMemesViewController: UIViewController {
     
     @objc func handleAddMeme() {
         let memeEditorViewController = MemeEditorViewController()
-        memeEditorViewController.modalPresentationStyle = .fullScreen
-        present(memeEditorViewController, animated: true, completion: nil)
+        self.navigationController?.pushViewController(memeEditorViewController, animated: true)
     }
 }

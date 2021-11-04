@@ -15,7 +15,7 @@ class MemeCollectionCell: UICollectionViewCell {
         }
     }
     
-    let memeImageView: UIImageView = {
+    private let memeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill

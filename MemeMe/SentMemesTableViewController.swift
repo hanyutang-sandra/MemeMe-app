@@ -8,15 +8,18 @@
 import Foundation
 import UIKit
 
-class SentMemesTableViewController: SentMemesViewController, UITableViewDataSource, UITableViewDelegate {
+class SentMemesTableViewController: SentMemesViewController {
     private let memesTableView = UITableView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.addSubview(memesTableView)
+        
         memesTableView.dataSource = self
         memesTableView.delegate = self
         memesTableView.register(UITableViewCell.self, forCellReuseIdentifier: "memeCell")
+        
         installConstraints()
     }
     
@@ -37,7 +40,9 @@ class SentMemesTableViewController: SentMemesViewController, UITableViewDataSour
             memesTableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor)
         ])
     }
-    
+}
+
+extension SentMemesTableViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return memes.count
     }
@@ -46,8 +51,8 @@ class SentMemesTableViewController: SentMemesViewController, UITableViewDataSour
         var cell = tableView.dequeueReusableCell(withIdentifier: "memeCell", for: indexPath)
         cell = UITableViewCell(style: .subtitle, reuseIdentifier: "memeCell")
         cell.imageView?.image = memes[indexPath.row].memeImage
-        cell.textLabel?.text = memes[indexPath.row].topText
-        cell.detailTextLabel?.text = memes[indexPath.row].bottomText
+        cell.textLabel?.text = memes[indexPath.row].topText + memes[indexPath.row].bottomText
+        cell.detailTextLabel?.text = nil
         return cell
     }
     

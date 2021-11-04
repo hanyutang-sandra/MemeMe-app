@@ -33,6 +33,8 @@ class MemeEditorViewController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tabBarController?.tabBar.isHidden = true
+        self.navigationController?.navigationBar.isHidden = true
         view.addSubview(memeImageView)
         topTextField.delegate = self
         view.addSubview(topTextField)
@@ -51,6 +53,8 @@ class MemeEditorViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.isHidden = false
+        self.tabBarController?.tabBar.isHidden = false
         unsubscribeFromKeyboardNotifications()
     }
     
@@ -188,7 +192,7 @@ extension MemeEditorViewController {
         topToolbar.setItems([shareBarButtonItem, flexibleSpaceBarItem, cancelBarButtonItem], animated: true)
         shareBarButtonItem.isEnabled = false
         topToolbar.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             topToolbar.widthAnchor.constraint(equalTo: view.widthAnchor),
             topToolbar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
@@ -201,7 +205,7 @@ extension MemeEditorViewController {
         bottomTextField.text = "BOTTOM"
         shareBarButtonItem.isEnabled = false
         
-        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func generateMemedImage() -> UIImage {
@@ -233,7 +237,7 @@ extension MemeEditorViewController {
             (activity, success, items, error) in
             if(success && error == nil){
                 self.save(memeImage: newMemeImage)
-                self.dismiss(animated: true, completion: nil);
+                self.navigationController?.popViewController(animated: true)
             }}
     }
 }

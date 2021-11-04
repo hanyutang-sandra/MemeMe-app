@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 
-class SentMemesCollectionViewController: SentMemesViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class SentMemesCollectionViewController: SentMemesViewController {
     private let space:CGFloat = 3.0
     private var portraitDimension:CGFloat {
         return (view.frame.size.width - (2 * space)) / 3.0
@@ -66,7 +66,9 @@ class SentMemesCollectionViewController: SentMemesViewController, UICollectionVi
             memesCollectionView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor)
         ])
     }
-    
+}
+
+extension SentMemesCollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return memes.count
     }

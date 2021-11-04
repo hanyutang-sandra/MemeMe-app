@@ -61,10 +61,10 @@
 				363C61A527307CCF003F62F8 /* Info.plist */,
 				363C61A627307CCF003F62F8 /* Meme.swift */,
 				363C61A727307CCF003F62F8 /* SceneDelegate.swift */,
-				360D809A273306260018AAFB /* SentMemesViewController.swift */,
 				360D80A0273317870018AAFB /* MemeDetailViewController.swift */,
 				360D809C273309AE0018AAFB /* TabBarController.swift */,
 				360D80A627345B9D0018AAFB /* MemeCollectionCell.swift */,
+				360D809A273306260018AAFB /* SentMemesViewController.swift */,
 				360D80A8273469240018AAFB /* SentMemesTableViewController.swift */,
 				360D80AA2734696D0018AAFB /* SentMemesCollectionViewController.swift */,
 			);
