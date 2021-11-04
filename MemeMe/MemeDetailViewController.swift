@@ -19,6 +19,11 @@ class MemeDetailViewController: UIViewController {
         installConstraints()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
     func installConstraints(){
         memeImage.translatesAutoresizingMaskIntoConstraints = false
         memeImage.contentMode = .scaleAspectFit
