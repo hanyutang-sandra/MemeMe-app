@@ -121,7 +121,7 @@ extension MemeEditorViewController: UITextFieldDelegate {
 // MARK: Keyboard handling
 extension MemeEditorViewController {
     @objc func keyboardWillShow(_ notification:Notification) {
-        if bottomTextField.isEditing {
+        if bottomTextField.isFirstResponder {
             view.frame.origin.y = -getKeyboardHeight(notification)
         }
     }
@@ -209,17 +209,20 @@ extension MemeEditorViewController {
     }
     
     func generateMemedImage() -> UIImage {
-        topToolbar.isHidden = true
-        bottomToolbar.isHidden = true
+        hideAndShowBars(shouldHideBars: true)
         
         UIGraphicsBeginImageContext(view.frame.size)
         view.drawHierarchy(in: view.frame, afterScreenUpdates: true)
         let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         
-        topToolbar.isHidden = false
-        bottomToolbar.isHidden = false
+        hideAndShowBars(shouldHideBars: false)
         return memedImage
+    }
+    
+    func hideAndShowBars(shouldHideBars:Bool){
+        topToolbar.isHidden = shouldHideBars
+        bottomToolbar.isHidden = shouldHideBars
     }
     
     func save(memeImage: UIImage) {
